@@ -1,9 +1,11 @@
 extern crate encoding_rs;
 extern crate encoding_rs_io;
+extern crate regex;
 
 use std::cmp::min;
 use std::io::{self, BufRead, BufReader};
 use std::fs::File;
+use regex::Regex;
 
 use encoding_rs::WINDOWS_1252;
 use encoding_rs_io::DecodeReaderBytesBuilder;
@@ -37,8 +39,9 @@ fn lev(a : &str, b : &str) -> u64 {
 }
 
 fn corrige (mut dico : Vec<String>, texte : String) {
-    let mots : Vec<&str> = texte.split_whitespace().collect();
-    for mot in mots.iter().filter(|m| m.len() >= 2) {
+    let regex_mot = Regex::new(r"\w+").unwrap();
+    let mots : Vec<&str> = regex_mot.find_iter(&texte).map(|m| m.as_str()).collect();
+    for mot in mots.iter().filter(|m| m.chars().count() >= 2) {
         let lower_mot = mot.to_lowercase();
         if !dico.contains(&lower_mot) {
             dico.sort_by_cached_key(|m| lev(&lower_mot, m));
@@ -56,6 +59,8 @@ fn main() -> std::io::Result<()> {
     let reader = BufReader::new(decoder);
     let dico : Vec<String> = reader.lines().into_iter().map(|m| m.unwrap()).collect();
     let mut texte = String::new();
+
+    println!("Entrez votre texte à corriger à la ligne suivante :");
     io::stdin().read_line(&mut texte).unwrap();
     corrige(dico, texte);
     
