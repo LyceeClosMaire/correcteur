@@ -4,7 +4,7 @@ use encoding_rs::*;
 use encoding_rs_io::DecodeReaderBytesBuilder;
 use icu_normalizer::ComposingNormalizer;
 
-mod levenshtein;
+use levenshtein;
 
 fn main() -> std::io::Result<()> {
     let norm = ComposingNormalizer::new_nfc();
