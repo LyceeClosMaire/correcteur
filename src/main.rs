@@ -11,8 +11,10 @@ use encoding_rs::WINDOWS_1252;
 use encoding_rs_io::DecodeReaderBytesBuilder;
 
 fn lev(a : &str, b : &str) -> u64 {
-    let n = a.chars().count();
-    let m = b.chars().count();
+    let av : Vec<_> = a.chars().collect();
+    let bv : Vec<_> = b.chars().collect();
+    let n = av.len();
+    let m = bv.len();
     let mut distances : Vec<u64> = Vec::new();
     distances.resize( (n+1)*(m+1), 0);
 
@@ -24,7 +26,7 @@ fn lev(a : &str, b : &str) -> u64 {
             else if j == 0 {
                 distances[i*(m+1) + j] = i as u64;
             }
-            else if a.chars().nth(i-1).unwrap() == b.chars().nth(j-1).unwrap() {
+            else if av[i-1] == bv[j-1] {
                 distances[i*(m+1) + j] = distances[(i-1)*(m+1) + (j-1)]
             }
             else {
