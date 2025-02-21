@@ -32,8 +32,12 @@ pub fn lev(a : &str, b : &str) -> u64 {
 }
 
 pub fn corrige (mut dico : Vec<String>, texte : String) {
-    let regex_mot = Regex::new(r"\w{2,}").unwrap();
-    let mots : Vec<&str> = regex_mot.find_iter(&texte).map(|m| m.as_str()).collect();
+    let regex_mot = Regex::new(r"\w+['’]?").unwrap();
+    let mots : Vec<&str> = 
+        regex_mot.find_iter(&texte)
+            .map(|m| m.as_str())
+            .filter(|w| {let last = w.chars().last(); last != Some('\'') && last != Some('’')})
+            .collect();
     for mot in mots.iter() {
         let lower_mot = mot.to_lowercase();
         if !dico.contains(&lower_mot) {
