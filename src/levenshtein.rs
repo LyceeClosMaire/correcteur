@@ -33,10 +33,14 @@ pub fn lev(a : &str, b : &str) -> u64 {
 
 pub fn corrige (mut dico : Vec<String>, texte : String) {
     let regex_mot = Regex::new(r"\w+['’]?").unwrap();
+    fn pas_d_apostrophe(w: &&str) -> bool {
+        let last = w.chars().last().unwrap(); 
+        return last != '\'' && last != '’'
+    }
     let mots : Vec<&str> = 
         regex_mot.find_iter(&texte)
             .map(|m| m.as_str())
-            .filter(|w| {let last = w.chars().last(); last != Some('\'') && last != Some('’')})
+            .filter(pas_d_apostrophe)
             .collect();
     for mot in mots.iter() {
         let lower_mot = mot.to_lowercase();
