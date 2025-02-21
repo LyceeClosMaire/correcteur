@@ -1,6 +1,3 @@
-extern crate regex;
-extern crate ndarray;
-
 use std::cmp::min;
 use regex::Regex;
 use ndarray::prelude::*;
