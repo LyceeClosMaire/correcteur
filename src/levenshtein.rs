@@ -37,11 +37,13 @@ pub fn corrige (mut dico : Vec<String>, texte : String) {
         let last = w.chars().last().unwrap(); 
         return last != '\'' && last != '’'
     }
+
     let mots : Vec<&str> = 
         regex_mot.find_iter(&texte)
             .map(|m| m.as_str())
             .filter(pas_d_apostrophe)
             .collect();
+
     for mot in mots.iter() {
         let lower_mot = mot.to_lowercase();
         if !dico.contains(&lower_mot) {
