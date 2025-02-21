@@ -29,9 +29,8 @@ mod benches {
             .unwrap());
         let reader = BufReader::new(decoder);
         let dico : Vec<String> = reader.lines().map(|m| norm.normalize(&m.unwrap())).collect();
-        let texte = String::from("chifre");
 
-        b.iter(|| levenshtein::corrige(dico.clone(), texte.clone()));
+        b.iter(|| dico.clone().sort_by_cached_key(|m| lev("chifre", m)));
     }
 
     #[bench]
@@ -43,9 +42,8 @@ mod benches {
             .unwrap());
         let reader = BufReader::new(decoder);
         let dico : Vec<String> = reader.lines().map(|m| norm.normalize(&m.unwrap())).collect();
-        let texte = String::from("chifre");
 
-        b.iter(|| levenshtein::corrige(dico.clone(), texte.clone()));
+        b.iter(|| dico.clone().sort_by_cached_key(|m| lev("chifre", m)));
     }
 }
 
