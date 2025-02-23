@@ -1,48 +1,46 @@
-use std::cmp::min;
-use regex::Regex;
 use ndarray::prelude::*;
+use regex::Regex;
+use std::cmp::min;
 
-pub fn lev(a : &str, b : &str) -> u64 {
-    let av : Vec<_> = a.chars().collect();
-    let bv : Vec<_> = b.chars().collect();
+pub fn lev(a: &str, b: &str) -> u64 {
+    let av: Vec<_> = a.chars().collect();
+    let bv: Vec<_> = b.chars().collect();
     let n = av.len();
     let m = bv.len();
-    let mut distances : Array<u64, _> = Array::zeros((n+1,m+1));
+    let mut distances: Array<u64, _> = Array::zeros((n + 1, m + 1));
 
-    for i in 0..n+1 {
-        for j in 0..m+1 {
+    for i in 0..n + 1 {
+        for j in 0..m + 1 {
             if i == 0 {
-                distances[(i,j)] = j as u64;
-            }
-            else if j == 0 {
-                distances[(i,j)] = i as u64;
-            }
-            else if av[i-1] == bv[j-1] {
-                distances[(i,j)] = distances[(i-1,j-1)]
-            }
-            else {
-                distances[(i,j)] = 1 + min(distances[(i-1,j)], 
-                                            min(distances[(i,j-1)], 
-                                                distances[(i-1,j-1)]))
+                distances[(i, j)] = j as u64;
+            } else if j == 0 {
+                distances[(i, j)] = i as u64;
+            } else if av[i - 1] == bv[j - 1] {
+                distances[(i, j)] = distances[(i - 1, j - 1)]
+            } else {
+                distances[(i, j)] = 1 + min(
+                    distances[(i - 1, j)],
+                    min(distances[(i, j - 1)], distances[(i - 1, j - 1)]),
+                )
             }
         }
     }
 
-    return distances[(n,m)]
+    return distances[(n, m)];
 }
 
-pub fn corrige (mut dico : Vec<String>, texte : String) {
+pub fn corrige(mut dico: Vec<String>, texte: String) {
     let regex_mot = Regex::new(r"\w+['’]?").unwrap();
     fn pas_d_apostrophe(w: &&str) -> bool {
-        let last = w.chars().last().unwrap(); 
-        return last != '\'' && last != '’'
+        let last = w.chars().last().unwrap();
+        return last != '\'' && last != '’';
     }
 
-    let mots : Vec<&str> = 
-        regex_mot.find_iter(&texte)
-            .map(|m| m.as_str())
-            .filter(pas_d_apostrophe)
-            .collect();
+    let mots: Vec<&str> = regex_mot
+        .find_iter(&texte)
+        .map(|m| m.as_str())
+        .filter(pas_d_apostrophe)
+        .collect();
 
     for mot in mots.iter() {
         let lower_mot = mot.to_lowercase();
